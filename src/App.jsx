@@ -26,19 +26,27 @@ function App() {
   const handleMultipleSubmit = async (e) => {
     e.preventDefault();
     const names = namesInput.split(',').map((n) => n.trim());
-    const res = await fetch('https://pokemonbackend-production-ef16.up.railway.app/', {
+    const res = await fetch('https://pokemonbackend-production-ef16.up.railway.app/api/pokemons', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ names }),
     });
-    const data = await res.json();
-    if (res.ok) {
-      setPokemonList(data);
-    } else {
-      alert(data.message);
+  
+    try {
+      const data = await res.json();
+      if (res.ok) {
+        setPokemonList(data);
+      } else {
+        alert(data.message);
+        setPokemonList([]);
+      }
+    } catch (err) {
+      alert('Invalid response from server');
+      console.error('Error parsing JSON:', err);
       setPokemonList([]);
     }
   };
+  
 
   const handleTypeSubmit = async (e) => {
     e.preventDefault();
